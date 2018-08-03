@@ -17,7 +17,7 @@ public class CommandUtil implements FileWatcher {
   private static final String CMD_FILE = "commands.properties";
   private static Properties commands;
 
-  private static final Logger logger = LoggerFactory.getLogger(CommandUtil.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CommandUtil.class);
 
   private static final ReadWriteLock RWL = new ReentrantReadWriteLock();
   private static final Lock RLOCK = RWL.readLock();
@@ -33,7 +33,7 @@ public class CommandUtil implements FileWatcher {
       commands.load(is);
     } catch (Exception e) {
       commands = null;
-      logger.error("loadCommands - " + e.toString());
+      LOGGER.error("loadCommands - " + e.toString());
     }
   }
 
@@ -56,10 +56,10 @@ public class CommandUtil implements FileWatcher {
         while ((line = in.readLine()) != null) {
           retVal.append(line.trim()).append(newLine);
         }
-        logger.info("Exit value : " + process.waitFor());
+        LOGGER.info("Exit value : " + process.waitFor());
         process.destroy();
       } catch (Exception e) {
-        logger.error("executeCommand - " + e);
+        LOGGER.error("executeCommand - " + e);
         throw e;
       }
     }
@@ -91,7 +91,7 @@ public class CommandUtil implements FileWatcher {
 
   @Override
   public void onFileModified() {
-    logger.info("onFileModified - " + CMD_FILE);
+    LOGGER.info("onFileModified - " + CMD_FILE);
     WLOCK.lock();
     try {
       commands.clear();

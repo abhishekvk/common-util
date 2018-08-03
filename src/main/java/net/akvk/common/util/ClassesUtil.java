@@ -16,7 +16,7 @@ public class ClassesUtil implements FileWatcher {
   private static final String CLASSES_FILE = "classes.properties";
   private static Properties classes = null;
 
-  private static final Logger logger = LoggerFactory.getLogger(ClassesUtil.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ClassesUtil.class);
 
   private static final ReadWriteLock RWL = new ReentrantReadWriteLock();
   private static final Lock RLOCK = RWL.readLock();
@@ -32,7 +32,7 @@ public class ClassesUtil implements FileWatcher {
       classes.load(is);
     } catch (IOException e) {
       classes = null;
-      logger.error("loadClasses - " + e.toString());
+      LOGGER.error("loadClasses - " + e.toString());
     }
   }
 
@@ -54,15 +54,15 @@ public class ClassesUtil implements FileWatcher {
     String value = getClassName(propertyName);
     if (value != null) {
       retVal = value.split(",");
-    }
+    } else {
+			retVal = new String[0];
+		}
     return retVal;
   }
 
   public static Class getClassFromName(String propertyName) throws Exception {
-    Class retVal = null;
     String value = getClassName(propertyName);
-    retVal = Class.forName(value);
-    return retVal;
+    return Class.forName(value);
   }
 
   public static List<Class> getClassesFromName(String propertyName) throws Exception {
@@ -76,10 +76,20 @@ public class ClassesUtil implements FileWatcher {
     }
     return retVal;
   }
+	
+	public static Object getObjectFromName(String propertyName) throws Exception{
+		Class clazz = getClassFromName(propertyName);
+		return clazz.getConstructor().newInstance();
+	}
+	
+	public static Object getObjectFromName(String propertyName, Class argType, Object value) throws Exception{
+		Class clazz = getClassFromName(propertyName);
+		return clazz.getConstructor(argType).newInstance(value);
+	}
 
   @Override
   public void onFileModified() {
-    logger.info("onFileModified - " + CLASSES_FILE);
+    LOGGER.info("onFileModified - " + CLASSES_FILE);
     WLOCK.lock();
     try {
       classes.clear();

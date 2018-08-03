@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 public class StringUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(StringUtil.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(StringUtil.class);
 
   public static String encloseWithin(String str, char charToEnclose) {
     return charToEnclose + str + charToEnclose;
@@ -48,7 +48,7 @@ public class StringUtil {
       try {
         Thread.sleep(10);
       } catch (InterruptedException e) {
-        logger.error("getUUIDForURL -" + e);
+        LOGGER.error("getUUIDForURL -" + e);
       }
       uuid = UUID.randomUUID().toString();
     }

@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public class StateMachineUtil implements FileWatcher {
 
-  private static final Logger logger = LoggerFactory.getLogger(StateMachineUtil.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(StateMachineUtil.class);
 
   private static final String STATE_MACHINE_FILE = "state-machine.ini";
 
@@ -36,15 +36,15 @@ public class StateMachineUtil implements FileWatcher {
     try (InputStream in = FileUtil.getConfigStream(STATE_MACHINE_FILE)) {
       stateMachineProperty = new Ini();
       stateMachineProperty.load(in);
-      logger.info("Number of state machines : " + stateMachineProperty.size());
+      LOGGER.info("Number of state machines : " + stateMachineProperty.size());
     } catch (IOException ex) {
-      logger.error("loadStateMachine - Unable to load state machine file. " + ex);
+      LOGGER.error("loadStateMachine - Unable to load state machine file. " + ex);
     }
   }
 
   public synchronized static StateMachine stateMachine(String section, String initialState, ActionProvider actionProvider) throws Exception {
     StateMachine<String, String> stateMachine = new StateMachine(initialState);
-    logger.info("Create state machine for " + section + " with initial state " + initialState);
+    LOGGER.info("Create state machine for " + section + " with initial state " + initialState);
     Map<String, String> smSection = null;
     RLOCK.lock();
     try {
@@ -53,7 +53,7 @@ public class StateMachineUtil implements FileWatcher {
       RLOCK.unlock();
     }
     if (smSection == null) {
-      logger.error("No section found for " + section);
+      LOGGER.error("No section found for " + section);
       return stateMachine;
     }
     configuredStates.clear();
@@ -79,7 +79,7 @@ public class StateMachineUtil implements FileWatcher {
       if (permits != null) {
         String[] permitsArray = permits.split(",");
         for (String permit : permitsArray) {
-          logger.info("Permit :" + permit + ", state : " + section.get("state." + state + "." + permit));
+          LOGGER.info("Permit :" + permit + ", state : " + section.get("state." + state + "." + permit));
           cfg.permit(permit, section.get("state." + state + "." + permit));
           updateStateMachine(stateMachine, section.get("state." + state + "." + permit), section, provider);
         }
@@ -89,7 +89,7 @@ public class StateMachineUtil implements FileWatcher {
 
   @Override
   public void onFileModified() {
-    logger.info("onFileModified - " + STATE_MACHINE_FILE);
+    LOGGER.info("onFileModified - " + STATE_MACHINE_FILE);
     WLOCK.lock();
     try {
       stateMachineProperty.clear();

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 public class FileUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
 
   private static String cfgDir;
 
@@ -76,7 +76,7 @@ public class FileUtil {
         retVal = createDir.exists();
       }
     } catch (Exception e) {
-      logger.error("createDirectory - ", e);
+      LOGGER.error("createDirectory - ", e);
       retVal = false;
     }
     return retVal;
