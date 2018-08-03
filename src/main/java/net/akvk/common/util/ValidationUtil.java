@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class ValidationUtil implements FileWatcher {
 
-  private static final Logger logger = LoggerFactory.getLogger(ValidationUtil.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ValidationUtil.class);
 
   private static final String VAILDATION_FILE = "validation.properties";
   private static Properties validation = null;
@@ -28,7 +28,7 @@ public class ValidationUtil implements FileWatcher {
       validation = new Properties();
       validation.load(is);
     } catch (Exception e) {
-      logger.error("loadValidation - " + e.toString());
+      LOGGER.error("loadValidation - " + e.toString());
     }
   }
 
@@ -38,7 +38,7 @@ public class ValidationUtil implements FileWatcher {
     try {
       if (value != null && property != null) {
         if (!(retVal = value.matches(validation.getProperty(property.getKey())))) {
-          logger.warn("isValidPattern - Validation error. Value: " + value + " , Pattern(" + property.getKey() + "):" + validation.getProperty(property.getKey()));
+          LOGGER.warn("isValidPattern - Validation error. Value: " + value + " , Pattern(" + property.getKey() + "):" + validation.getProperty(property.getKey()));
         }
       }
     } finally {
@@ -76,7 +76,7 @@ public class ValidationUtil implements FileWatcher {
           String val = value.trim();
           for (String name : reservedNames) {
             if (val.equalsIgnoreCase(name.trim())) {
-              logger.warn("isReservedName - " + value + " is a reserved name.");
+              LOGGER.warn("isReservedName - " + value + " is a reserved name.");
               retVal = true;
               break;
             }
@@ -95,14 +95,14 @@ public class ValidationUtil implements FileWatcher {
       Long.parseLong(str);
     } catch (NumberFormatException e) {
       retVal = false;
-      logger.warn("isNumber - " + str + " is not a number. " + e);
+      LOGGER.warn("isNumber - " + str + " is not a number. " + e);
     }
     return retVal;
   }
 
   @Override
   public void onFileModified() {
-    logger.info("onFileModified - " + VAILDATION_FILE);
+    LOGGER.info("onFileModified - " + VAILDATION_FILE);
     WLOCK.lock();
     try {
       validation.clear();

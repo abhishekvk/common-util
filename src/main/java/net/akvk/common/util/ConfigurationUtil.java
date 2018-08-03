@@ -13,7 +13,7 @@ public class ConfigurationUtil implements FileWatcher {
   private static final String CONFIG_FILE = "config.properties";
   private static Properties properties = null;
 
-  private static final Logger logger = LoggerFactory.getLogger(ConfigurationUtil.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationUtil.class);
 
   private static final ReadWriteLock RWL = new ReentrantReadWriteLock();
   private static final Lock RLOCK = RWL.readLock();
@@ -29,7 +29,7 @@ public class ConfigurationUtil implements FileWatcher {
       properties.load(is);
       is.close();
     } catch (Exception e) {
-      logger.error("loadProperties - " + e.toString());
+      LOGGER.error("loadProperties - " + e.toString());
     }
   }
 
@@ -65,7 +65,7 @@ public class ConfigurationUtil implements FileWatcher {
 
   @Override
   public void onFileModified() {
-    logger.info("onFileModified - " + CONFIG_FILE);
+    LOGGER.info("onFileModified - " + CONFIG_FILE);
     WLOCK.lock();
     try {
       properties.clear();

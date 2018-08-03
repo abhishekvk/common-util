@@ -15,7 +15,7 @@ public class SparqlUtil implements FileWatcher {
   private static final String SPARQL_FILE = "sparql.properties";
   private static Properties sparql = null;
 
-  private static final Logger logger = LoggerFactory.getLogger(SparqlUtil.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SparqlUtil.class);
 
   private static final ReadWriteLock RWL = new ReentrantReadWriteLock();
   private static final Lock RLOCK = RWL.readLock();
@@ -31,7 +31,7 @@ public class SparqlUtil implements FileWatcher {
       sparql = new Properties();
       sparql.load(is);
     } catch (Exception e) {
-      logger.error("loadSparql - " + e.toString());
+      LOGGER.error("loadSparql - " + e.toString());
     }
   }
 
@@ -65,7 +65,7 @@ public class SparqlUtil implements FileWatcher {
 
   @Override
   public void onFileModified() {
-    logger.info("onFileModified - " + SPARQL_FILE);
+    LOGGER.info("onFileModified - " + SPARQL_FILE);
     WLOCK.lock();
     try {
       sparql.clear();

@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DirectoryWatchService implements Runnable {
-  private static final Logger logger = LoggerFactory.getLogger(DirectoryWatchService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DirectoryWatchService.class);
 
   private Path dir;
   private WatchService watcher;
@@ -22,7 +22,7 @@ public class DirectoryWatchService implements Runnable {
   public DirectoryWatchService(String path, DirectoryWatcher dWatcher) {
     if (path == null || path.trim().length() == 0) {
       dir = null;
-      logger.error("Got null or empty path");
+      LOGGER.error("Got null or empty path");
       throw new InvalidPathException(path, "null or empty path");
     }
     
@@ -34,16 +34,16 @@ public class DirectoryWatchService implements Runnable {
     dir = Paths.get(path);
     if (!dir.toFile().exists()) {
       dir = null;
-      logger.error("Path does not exist " + path);
+      LOGGER.error("Path does not exist " + path);
       throw new InvalidPathException(path, "Path does not exist.");
     }
 
     try {
-      logger.info("Request to watch " + path);
+      LOGGER.info("Request to watch " + path);
       watcher = FileSystems.getDefault().newWatchService();
       dir.register(watcher, ENTRY_MODIFY);
     } catch (Exception e) {
-      logger.error("DirectoryWatchService - " + e);
+      LOGGER.error("DirectoryWatchService - " + e);
     }
   }
 
@@ -71,17 +71,17 @@ public class DirectoryWatchService implements Runnable {
         }
         valid = key.reset();
       } catch (InterruptedException ie) {
-        logger.error("Thread is interrupted. The process may have stopped. Stop monitoring " + dir + ". " + ie.toString());
+        LOGGER.error("Thread is interrupted. The process may have stopped. Stop monitoring " + dir + ". " + ie.toString());
         valid = false;
       } catch (Exception e) {
-        logger.error("run - " + e);
+        LOGGER.error("run - " + e);
       }
     }
 
     try {
       watcher.close();
     } catch (IOException ioe) {
-      logger.error(ioe.toString());
+      LOGGER.error(ioe.toString());
     }
   }
 }
